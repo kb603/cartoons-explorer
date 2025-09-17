@@ -1,36 +1,159 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Cartoon Explorer
+
+A modern, responsive web application for discovering and exploring 2D cartoons. Built with Next.js 15, TypeScript, and Tailwind CSS, featuring real-time search, genre filtering, and a beautiful card-based interface.
+
+## Features
+
+- 🔍 **Real-time Search** - Search cartoons with debounced input for optimal performance
+- 🎭 **Genre Filtering** - Filter cartoons by multiple genres simultaneously
+- 📱 **Responsive Design** - Optimized for desktop, tablet, and mobile devices
+- 🖼️ **Interactive Cards** - Hover effects and detailed modal views
+- 📄 **Pagination** - Efficient navigation through large datasets
+- 🌐 **URL State Management** - Shareable URLs with search and filter state
+- ⚡ **Performance Optimized** - Turbopack for fast builds and hot reload
+- 🎨 **Modern UI** - Clean design with Radix UI components and Tailwind CSS
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+- Node.js 18 or later
+- npm, yarn, pnpm, or bun
 
+### Installation
+
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd cartoons-explorer
+```
+
+2. Install dependencies:
+```bash
+npm install
+# or
+yarn install
+# or
+pnpm install
+```
+
+3. Run the development server:
 ```bash
 npm run dev
 # or
 yarn dev
 # or
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+4. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Build for Production
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm start
+```
 
-## Learn More
+## Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+cartoons-explorer/
+├── app/                    # Next.js 15 App Router
+│   ├── globals.css        # Global styles
+│   ├── layout.tsx         # Root layout
+│   └── page.tsx          # Home page
+├── components/            # React components
+│   ├── CartoonCard.tsx   # Individual cartoon card
+│   ├── CartoonExplorer.tsx # Main explorer component
+│   ├── SearchBar.tsx     # Search input with clear functionality
+│   ├── GenreFilter.tsx   # Multi-select genre filter
+│   ├── Grid.tsx         # Responsive card grid
+│   └── ...              # Other UI components
+├── hooks/                # Custom React hooks
+│   ├── useCartoon.ts    # Cartoon data fetching logic
+│   ├── useDebounce.ts   # Debounced input handling
+│   └── useUrlState.ts   # URL state synchronization
+├── lib/                  # Utilities and API
+│   └── api.ts           # Cartoon API client
+└── types/               # TypeScript definitions
+    └── cartoon.ts       # Cartoon data types
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Key Technical Decisions
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Architecture & State Management
+- **Next.js 15 with App Router**: Leverages the latest Next.js features for optimal performance
+- **URL-based State**: Search terms and filters are reflected in the URL for shareability and browser history support
+- **Custom Hooks Pattern**: Business logic separated into reusable hooks (`useCartoon`, `useUrlState`, `useDebounce`)
+- **Client-side Filtering**: All data fetched once, then filtered client-side for fast interactions
 
-## Deploy on Vercel
+### Performance Optimizations
+- **Debounced Search**: 500ms debounce prevents excessive API calls during typing
+- **Turbopack**: Next.js 15's faster bundler for development and production builds
+- **Optimistic UI Updates**: Immediate local state updates with URL synchronization
+- **Pagination**: Handles large datasets efficiently (50 items per page)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### UI/UX Design
+- **Radix UI**: Accessible, unstyled components as foundation
+- **Tailwind CSS**: Utility-first styling with custom design system
+- **Responsive Grid**: CSS Grid with responsive breakpoints
+- **Loading States**: Skeleton loaders and error boundaries for better UX
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Trade-offs & Considerations
+
+### Client-side vs Server-side Filtering
+**Decision**: Client-side filtering  
+**Pros**: Fast interactions, no network requests for filters, works offline  
+**Cons**: Initial load includes all data, not suitable for very large datasets  
+**Rationale**: The cartoon dataset is reasonably sized (~200 items), making client-side filtering more responsive
+
+### URL State Synchronization
+**Decision**: Sync all filter state to URL parameters  
+**Pros**: Shareable links, browser history support, bookmark-friendly  
+**Cons**: More complex state management, potential URL pollution  
+**Rationale**: Enhances user experience and allows sharing of filtered views
+
+### Debounce Implementation
+**Decision**: 500ms debounce for search input  
+**Pros**: Reduces unnecessary processing and API calls  
+**Cons**: Slight delay in search results  
+**Rationale**: Balances responsiveness with performance
+
+### Component Organization
+**Decision**: Feature-based component structure  
+**Pros**: Easy to locate and maintain related code  
+**Cons**: Some code duplication across similar components  
+**Rationale**: Improves developer experience and scalability
+
+### External Dependencies
+**Decision**: Minimal external dependencies (Radix UI, Lucide React)  
+**Pros**: Smaller bundle size, fewer security vulnerabilities  
+**Cons**: More custom implementation required  
+**Rationale**: Keeps the project lightweight while providing essential functionality
+
+## API Integration
+
+The app uses the [Sample APIs Cartoons 2D](https://api.sampleapis.com/cartoons/cartoons2D) endpoint:
+- **Base URL**: `https://api.sampleapis.com/cartoons/cartoons2D`
+- **Method**: GET
+- **Response**: Array of cartoon objects with title, creator, year, genre, etc.
+- **Error Handling**: Graceful fallbacks and user-friendly error messages
+
+## Browser Support
+
+- Chrome/Edge 91+
+- Firefox 90+
+- Safari 14+
+- Mobile browsers with ES2020 support
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature-name`
+3. Commit changes: `git commit -am 'Add feature'`
+4. Push to branch: `git push origin feature-name`
+5. Submit a pull request
+
+## License
+
+This project is open source and available under the [MIT License](LICENSE).
